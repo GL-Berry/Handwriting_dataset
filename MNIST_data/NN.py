@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Time    : 2020/2/11 16:06
+# @Time    : 2020/2/13 11:34
 # @Author  : GL
 # @File    : NN.py
 import tensorflow as tf
