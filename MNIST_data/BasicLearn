@@ -1,0 +1,52 @@
+import tensorflow as tf
+from tensorflow.keras import layers
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+import pandas as pd
+
+
+def Vector2Image(Vectors, Maxrows=6, Maxcolumns=6):
+    # Vectors is a matrix, with num_sample*num_feature
+    if Vectors.shape[0] > Maxrows * Maxcolumns:
+        assert "Index error"
+    else:
+        rows = min(Vectors.shape[0] // Maxcolumns + 1, Maxrows)
+        for index in range(Vectors.shape[0]):
+            plt.subplot(rows, Maxcolumns, index + 1)
+            plt.imshow(Vectors.iloc[index, 1:].values.reshape(28, 28), cmap="gray")
+            plt.title(Vectors.iloc[index, 0])
+        plt.show()
+    return
+
+
+def readfile(kind):
+    Train_path = os.path.join(os.getcwd(), 'fashion-mnist_%s.csv' % kind[0])
+    Train_data = pd.read_csv(Train_path)
+    Test_path = os.path.join(os.getcwd(), 'fashion-mnist_%s.csv' % kind[1])
+    Test_data = pd.read_csv(Test_path)
+    return Train_data, Test_data
+
+
+def constract_model():
+    model = tf.keras.Sequential()
+    model.add(layers.Dense(128, activation="relu"))
+    model.add(layers.Dense(10))
+    model.compile(optimizer="adam",
+                  loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+                  metrics=["accuracy"])
+    return model
+
+
+def main():
+    Train_data, Test_data = readfile(["Train", "Test"])
+    Train_images, Train_labels = Train_data.iloc[:, 1:], Train_data.iloc[:, 0]
+    model = constract_model()
+    model.fit(Train_images.values / 255.0, Train_labels.values, epochs=10)
+    Test_images, Test_labels = Test_data.iloc[:, 1:], Test_data.iloc[:, 0]
+    Test_loss, Test_acc = model.evaluate(Test_images.values / 255.0, Test_labels)
+    print("\nTest Loss: %f.\nTest acc: %f." % (Test_loss, Test_acc))
+
+
+if __name__ == "__main__":
+    main()
