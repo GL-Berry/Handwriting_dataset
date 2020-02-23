@@ -94,12 +94,6 @@ def main():
         plot_value_array(i, predictions_array=predictions[i], true_label=Test_labels)
     plt.tight_layout()
     plt.show()
-    img = Test_images.values[0]
-    print(img.shape)
-    img = np.expand_dims(img, 0)
-    print(img.shape)
-    predictions_single = probability_model.predict(img)
-    print(predictions_single)
 
 if __name__ == "__main__":
     main()
